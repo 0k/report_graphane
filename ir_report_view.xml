@@ -1,0 +1,47 @@
+<openerp>
+  <data>
+    <record id="act_report_xml_view" model="ir.ui.view">
+      <field name="name">ir.actions.report.xml.inherit</field>
+      <field name="model">ir.actions.report.xml</field>
+      <field name="inherit_id" ref="report_xml.act_report_xml_view"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <xpath expr="/form/notebook/page[@string='Security']"
+               position="before" >
+          <page string="Graphane"
+                attrs="{'invisible':[('report_type','!=','graphane')]}">
+            <group colspan="2" col="2">
+              <separator colspan="4" string="Print Options" />
+              <field name="graphane_xmlrpc_url" colspan="2"/>
+              <field name="graphane_debug" colspan="2" />
+            </group>
+            <group colspan="2">
+              <separator colspan="4" string="Print Actions" />
+              <field name="graphane_add_print_button_exists" invisible="1"/>
+              <button type="object"
+                      string="Add Print Button"
+                      name="add_print_button"
+                      icon="gtk-add"
+                      attrs="{'invisible':[('graphane_add_print_button_exists','==',True)]}"/>
+              <button type="object"
+                      string="Remove Print Button"
+                      name="remove_print_button"
+                      icon="gtk-remove"
+                      attrs="{'invisible':[('graphane_add_print_button_exists','!=',True)]}"/>
+            </group>
+            <group colspan="4">
+              <separator colspan="4" string="Graphane Print Header" />
+              <field colspan="4" name="graphane_header" nolabel="1" />
+              <!-- Field is required in the form as we will do invisible test
+                   based on its value in the client side.
+              -->
+            </group>
+
+
+
+          </page>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</openerp>
