@@ -16,7 +16,8 @@ def file_get_contents(filename):
 
 class GraphaneXMLRPC(object):
 
-    METHOD_SEND = "service.generate-document"
+    METHOD_GENERATE = "service.generate-document"
+    METHOD_SEND = "server.process-stream"
 
     def __init__(self, url):
 
@@ -31,7 +32,7 @@ class GraphaneXMLRPC(object):
 
     def generate(self, filename, content):
 
-        method = getattr(self.server, self.METHOD_SEND)
+        method = getattr(self.server, self.METHOD_GENERATE)
 
         ## Graphane XML-RPC method awaits a hash (key, arg association) which
         ## is generated from the ``dict`` python type by ``xmlrpclib``
@@ -41,11 +42,22 @@ class GraphaneXMLRPC(object):
             })
 
         if ans['result-code'] != 0:
-            try:
-                msg = ans['result-message'] % ans['result-message-vars']
-            except:
-                import pdb; pdb.set_trace()
+            msg = ans['result-message'] % ans['result-message-vars']
             raise XMLRPCException("Send XML-RPC failed: %s (result-code: %s)"
                                   % (msg.split('\n')[0], ans['result-code']))
 
         return ans['document-data'].data
+
+    def publish(self, filename, content):
+
+        method = getattr(self.server, self.METHOD_SEND)
+
+        ## Graphane XML-RPC method awaits a hash (key, arg association) which
+        ## is generated from the ``dict`` python type by ``xmlrpclib``
+        ans = method({
+            'stream-name': filename,
+            'stream-data': xmlrpclib.Binary(content)
+            })
+
+        return ans
+

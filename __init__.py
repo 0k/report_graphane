@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import report
+## model definitions
+
 import ir_report
+
+import wizard
 

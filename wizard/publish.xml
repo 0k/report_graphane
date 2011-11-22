@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <!-- Wizard -->
+
+    <record model="ir.ui.view" id="view_report_graphane_publish_actions">
+      <field name="name">Graphane Publication actions wizard</field>
+      <field name="model">report.graphane_publish.actions</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Publication Options" col="4">
+          <group colspan="6" col="4" >
+            <button string="_Cancel" icon="gtk-cancel" special="cancel" />
+            <button name="do_action" type="object" string="_Ok" icon="gtk-ok" />
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <!-- Action -->
+
+    <act_window name="Graphane Publish"
+                res_model="report.graphane_publish.actions"
+                view_mode="form"
+                view_type="form"
+                target="new"
+                id="wizard_graphane_publish" />
+  </data>
+</openerp>

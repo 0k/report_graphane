@@ -8,16 +8,45 @@
       <field name="arch" type="xml">
         <xpath expr="/form/notebook/page[@string='Security']"
                position="before" >
-          <page string="Graphane"
+          <page string="Graphane Print"
                 attrs="{'invisible':[('report_type','!=','graphane')]}">
             <group colspan="2" col="2">
               <separator colspan="4" string="Print Options" />
-              <field name="graphane_xmlrpc_url" colspan="2"/>
-              <field name="graphane_debug" colspan="2" />
+              <field name="graphane_print_xmlrpc_url" colspan="2"/>
+              <field name="graphane_print_debug" colspan="2" />
             </group>
             <group colspan="4">
               <separator colspan="4" string="Graphane Print Header" />
-              <field colspan="4" name="graphane_header" nolabel="1" />
+              <field colspan="4" name="graphane_print_header" nolabel="1" />
+            </group>
+          </page>
+          <page string="Graphane Publish"
+                attrs="{'invisible':[('report_type','!=','graphane')]}">
+
+            <group colspan="2" col="2">
+              <separator colspan="4" string="Publish Options" />
+              <field name="graphane_publish_xmlrpc_url" colspan="2"/>
+            </group>
+            <group colspan="2" col="2">
+              <!-- Field is required in the form as we will do invisible test
+                   based on its value in the client side.
+              -->
+              <separator colspan="2" string="Publish Actions" />
+              <field name="publish_action_exists" invisible="1"/>
+              <button type="object"
+                      string="Add Publish Action"
+                      name="add_publish_action"
+                      icon="gtk-add"
+                      attrs="{'invisible':[('publish_action_exists','==',True)]}"/>
+              <button type="object"
+                      string="Remove Publish Action"
+                      name="remove_publish_action"
+                      icon="gtk-remove"
+                      attrs="{'invisible':[('publish_action_exists','!=',True)]}"/>
+            </group>
+            <group colspan="4">
+              <separator colspan="4" string="Graphane Publish Header" />
+              <field colspan="4" name="graphane_publish_header" nolabel="1" />
             </group>
 
           </page>

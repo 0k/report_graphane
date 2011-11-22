@@ -24,19 +24,96 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
 
 class ReportGraphane(osv.osv):
 
+    ## Add Publish action
+
+    _action_type = 'client_action_multi'
+    _action_xmlid = 'wizard_graphane_publish'
+
+    def _get_act_window(self, cr, uid, xmlid, context):
+        ## XXXvlab: does not support more than one action of type report.graphane_publish.actions
+        domain = [('res_model', '=', 'report.graphane_publish.actions')]
+
+        act_pool = self.pool.get('ir.actions.act_window')
+        res = act_pool.search(cr, uid, domain)
+
+        return act_pool.browse(cr, uid, res[0], context)
+
+    def _action_value(self, action):
+        ## This format is enforced to find the correct action to trigger
+        return '%s,%d' % (action.type, action.id)
+
+    def _publish_action_exists(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        ir_values = self.pool.get('ir.values')
+
+        for id in ids:
+            action = self._get_act_window(cr, uid, 'wizard_graphane_publish', context)
+            domain = [('value', '=', self._action_value(action))]
+            res[id] = True if ir_values.search(cr, uid, domain) else False
+        return res
+
+    def add_publish_action(self, cr, uid, ids, context):
+
+        report = self.browse(cr, uid, ids[0], context=context)
+
+        act_win = self._get_act_window(cr, uid, 'wizard_graphane_publish', context)
+        action_id = self._action_value(act_win)
+
+        res = ir.ir_set(cr, uid, 'action', self._action_type,
+                        'wizard_graphane_publish', [report.model],
+                        action_id, isobject=True)
+
+        return True
+
+    def remove_publish_action(self, cr, uid, ids, context):
+
+        report = self.browse(cr, uid, ids[0], context=context)
+
+        act_win = self._get_act_window(cr, uid, 'wizard_graphane_publish', context)
+        action_id = self._action_value(act_win)
+
+        ir_values = self.pool.get('ir.values')
+        domain = [('value', '=', action_id)]
+        res =  ir_values.search(cr, uid, domain)
+
+        if len(res):
+            for id in res:
+                res = ir.ir_del(cr, uid, id)
+
+        return True
+
+    ## End of Publish action management
+
     _name = 'ir.actions.report.xml'
     _inherit = 'ir.actions.report.xml'
 
     _columns = {
-        'graphane_debug': fields.boolean('Debug Messages',
+
+        ## Print
+
+        'graphane_print_debug': fields.boolean('Debug Messages',
               help="Enable the graphane report engine debugger"),
 
-        'graphane_xmlrpc_url': fields.char('XML-RPC url',
+        'graphane_print_xmlrpc_url': fields.char('XML-RPC url',
               size=256,
               help="Graphane XML-RPC generation url (ie: "
                   "http://localhost:8070/graphane/rpc)"),
 
-        'graphane_header': fields.text('Graphane Header',
+        'graphane_print_header': fields.text('Graphane Header',
+              help="This header will be prepended to the XML "
+                  "dump used to manage the stream."),
+
+        ## Publish
+
+        'publish_action_exists': fields.function(_publish_action_exists,
+                                                  type="boolean", method=True),
+
+        'graphane_publish_xmlrpc_url': fields.char('XML-RPC url',
+              size=256,
+              help="Graphane XML-RPC generation url (ie: "
+                  "http://localhost:8070/graphane/rpc)"),
+
+        'graphane_publish_header': fields.text('Graphane Header',
               help="This header will be prepended to the XML "
                   "dump used to manage the stream."),
     }
@@ -105,6 +182,9 @@ class ReportGraphane(osv.osv):
                         )
 
         return super(ReportGraphane, self).write(cr, uid, ids, vals, context)
+
+
+
 
 
 
