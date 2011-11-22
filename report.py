@@ -59,23 +59,6 @@ class GraphaneParser(xml_report.XmlParser):
 
         return (pdf_content, 'pdf')
 
-    def create_single_xml(self, cr, uid, ids, data, report_xml, context=None):
-        """generate the XML"""
-        ## XXXvlab: who calls this function, why the hell it is the same code that create_pdf ?
-        ## and why do they play ping pong between single_pdf/single_xml ?
-        import pdb; pdb.set_trace()
-
-        if context is None:
-            context={}
-
-        if report_xml.report_type != 'xml':
-            return super(GraphaneParser,self).create_single_pdf(cr, uid, ids, data, report_xml, context=context)
-
-        if report_xml.xml_full_dump:
-            return self._create_full_dump_xml(cr, uid, ids, data, report_xml, context)
-
-        return self._create_mako_xml(cr, uid, ids, data, report_xml, context)
-
     def create(self, cursor, uid, ids, data, context=None):
         """We override the create function in order to handle generator
            Code taken from report webkit. Thanks guys :) """
