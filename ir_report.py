@@ -45,12 +45,11 @@ class ReportGraphane(osv.osv):
               help="Enable the graphane report engine debugger"),
 
         'graphane_xmlrpc_url': fields.char('XML-RPC url',
-              size=256, required=True,
+              size=256,
               help="Graphane XML-RPC generation url (ie: "
                   "http://localhost:8070/graphane/rpc)"),
 
         'graphane_header': fields.text('Graphane Header',
-              required=True,
               help="This header will be prepended to the XML "
                   "dump used to manage the stream."),
     }
