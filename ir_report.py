@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import netsvc
-import ir
 
 from osv import osv, fields
 from .report import GraphaneParser
@@ -59,9 +58,10 @@ class ReportGraphane(osv.osv):
         act_win = self._get_act_window(cr, uid, 'wizard_graphane_publish', context)
         action_id = self._action_value(act_win)
 
-        res = ir.ir_set(cr, uid, 'action', self._action_type,
-                        'wizard_graphane_publish', [report.model],
-                        action_id, isobject=True)
+        ir_values = self.pool.get('ir.values')
+        res = ir_values.set(cr, uid, 'action', self._action_type,
+                            'wizard_graphane_publish', [report.model],
+                            action_id, isobject=True)
 
         return True
 
@@ -77,8 +77,7 @@ class ReportGraphane(osv.osv):
         res =  ir_values.search(cr, uid, domain)
 
         if len(res):
-            for id in res:
-                res = ir.ir_del(cr, uid, id)
+            ir_values.unlink(cr, uid, res)
 
         return True
 
