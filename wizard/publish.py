@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import ir
 import netsvc
 
 from tools.translate import _
@@ -11,14 +10,17 @@ from ..ir_report import register_report
 
 
 class report_graphane_publish_actions(osv.osv_memory):
+
     _name = "report.graphane_publish.actions"
     _description = "Graphane Publish Actions"
+
     _columns = {
     }
+
     _defaults = {
     }
 
-    def do_action(self, cr, uid, ids, context=None):
+    def do_action(self, cr, uid, _ids, context=None):
 
         ## XXXvlab: bad way to get the GraphaneParser instance of the action
         obj_model = context['active_model']
@@ -40,20 +42,21 @@ class report_graphane_publish_actions(osv.osv_memory):
         ## XXXvlab: who calls this function
         new_context = context.copy()
 
-        ## Removing any active_* keys, as they are active_id(s) and active_model
-        ## will break the underlying searches
+        ## Removing any active_* keys, as they are active_id(s) and
+        ## active_model will break the underlying searches
         for k in new_context.keys():
             if k.startswith("active_"):
                 del new_context[k]
 
-        xml_content, _ =  service._create_full_dump_xml(cr, uid, context['active_ids'], None, \
-                                                        report, new_context, additional_data=report.graphane_publish_header)
+        xml_content, _ = service._create_full_dump_xml(
+            cr, uid, context['active_ids'], None,
+            report, new_context,
+            additional_data=report.graphane_publish_header)
 
         server = GraphaneXMLRPC(report.graphane_publish_xmlrpc_url)
         server.publish("input.xml", xml_content)
 
         return {'type': 'ir.actions.act_window_close'}
-
 
 
 report_graphane_publish_actions()
