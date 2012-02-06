@@ -48,13 +48,14 @@ class report_graphane_publish_actions(osv.osv_memory):
             if k.startswith("active_"):
                 del new_context[k]
 
-        xml_content, _ = service._create_full_dump_xml(
-            cr, uid, context['active_ids'], None,
-            report, new_context,
-            additional_data=report.graphane_publish_header)
+        for active_id in context['active_ids']:
+            xml_content, _ = service._create_full_dump_xml(
+                cr, uid, [active_id], None,
+                report, new_context,
+                additional_data=report.graphane_publish_header)
 
-        server = GraphaneXMLRPC(report.graphane_publish_xmlrpc_url)
-        server.publish("input.xml", xml_content)
+            server = GraphaneXMLRPC(report.graphane_publish_xmlrpc_url)
+            server.publish("input.xml", xml_content)
 
         return {'type': 'ir.actions.act_window_close'}
 
