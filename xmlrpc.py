@@ -46,7 +46,12 @@ class GraphaneXMLRPC(object):
             raise XMLRPCException("Send XML-RPC failed: %s (result-code: %s)"
                                   % (msg.split('\n')[0], ans['result-code']))
 
-        return ans['document-data'].data
+        sname = ans['document-name'].split('.') 
+        if len(sname) > 1:
+            ext = sname[-1]
+        else:
+            ext = 'pdf'
+        return ans['document-data'].data, ext
 
     def publish(self, filename, content):
 

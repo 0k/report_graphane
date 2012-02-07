@@ -51,9 +51,8 @@ class GraphaneParser(xml_report.XmlParser):
         xml_content, _ =  self._create_full_dump_xml(cr, uid, ids, data, report_xml, context,
                                                      additional_data=report_xml.graphane_print_header)
         server = GraphaneXMLRPC(report_xml.graphane_print_xmlrpc_url)
-        pdf_content = server.generate("input.xml", xml_content)
-
-        return (pdf_content, 'pdf')
+        pdf_content, ext = server.generate("input.xml", xml_content)
+        return (pdf_content, ext)
 
     def create(self, cursor, uid, ids, data, context=None):
         """We override the create function in order to handle generator
