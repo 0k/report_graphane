@@ -42,13 +42,13 @@ class GraphaneParser(xml_report.XmlParser):
         instead of PDF if report_type is 'xml'."""
 
         if context is None:
-            context={}
+            context = {}
 
         if report_xml.report_type != 'graphane':
             return super(GraphaneParser,self).create_single_pdf(cr, uid, ids, data, report_xml, context=context)
 
         ## XXXvlab: who calls this function
-        xml_content, _ =  self._create_full_dump_xml(cr, uid, ids, data, report_xml, context,
+        xml_content, _ =  self.create_single_xml(cr, uid, ids, data, report_xml, context,
                                                      additional_data=report_xml.graphane_print_header)
         server = GraphaneXMLRPC(report_xml.graphane_print_xmlrpc_url)
         pdf_content, ext = server.generate("input.xml", xml_content)

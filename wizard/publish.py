@@ -49,7 +49,7 @@ class report_graphane_publish_actions(osv.osv_memory):
                 del new_context[k]
 
         for active_id in context['active_ids']:
-            xml_content, _ = service._create_full_dump_xml(
+            xml_content, _ = service.create_single_xml(
                 cr, uid, [active_id], None,
                 report, new_context,
                 additional_data=report.graphane_publish_header)
