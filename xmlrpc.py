@@ -42,7 +42,12 @@ class GraphaneXMLRPC(object):
             })
 
         if ans['result-code'] != 0:
-            msg = ans['result-message'] % ans['result-message-vars']
+            try:
+                msg = ans['result-message'] % ans['result-message-vars']
+            except TypeError:
+                raise XMLRPCException("Send XML-RPC failed (result-code: %s) "
+                                      "and invalid result-message format:\n%r"
+                                      % (ans['result-code'], ans))
             raise XMLRPCException("Send XML-RPC failed: %s (result-code: %s)"
                                   % (msg.split('\n')[0], ans['result-code']))
 
