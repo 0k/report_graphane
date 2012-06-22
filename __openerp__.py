@@ -6,7 +6,7 @@
 backend.  The module structure and some code is inspired by the report_webkit
 module.
 """,
-    "version" : "0.1",
+    "version" : "%%short-version%%",
     "depends" : ["base", "report_xml"],
     "author" : "Valentin LAB -- Simplee",
     "category": "Reports/Pdf",
