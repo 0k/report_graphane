@@ -1,10 +1,20 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*
+"""Adds a publish and print tabs to reports of 'graphane' type
+
+The publish tab offers to manage the graphane publish header and the XML-RPC
+url of the publishing service.
+
+The print tab offers to manage the graphane print header and the XML-RPC url
+of the printing service.
+
+"""
+
 
 import netsvc
 
 from osv import osv, fields
 from .report import GraphaneParser
-from report_xml.ir_report import ReportXML, rml_parse
+from report_xml.ir_report import rml_parse
 
 
 def register_report(name, model, tmpl_path, parser=rml_parse):
@@ -29,7 +39,8 @@ class ReportGraphane(osv.osv):
     _action_xmlid = 'wizard_graphane_publish'
 
     def _get_act_window(self, cr, uid, xmlid, context):
-        ## XXXvlab: does not support more than one action of type report.graphane_publish.actions
+        ## XXXvlab: does not support more than one action of type
+        ## report.graphane_publish.actions
         domain = [('res_model', '=', 'report.graphane_publish.actions')]
 
         act_pool = self.pool.get('ir.actions.act_window')
@@ -41,12 +52,14 @@ class ReportGraphane(osv.osv):
         ## This format is enforced to find the correct action to trigger
         return '%s,%d' % (action.type, action.id)
 
-    def _publish_action_exists(self, cr, uid, ids, field_name, arg, context=None):
+    def _publish_action_exists(self, cr, uid, ids, field_name, arg,
+                               context=None):
         res = {}
         ir_values = self.pool.get('ir.values')
 
         for id in ids:
-            action = self._get_act_window(cr, uid, 'wizard_graphane_publish', context)
+            action = self._get_act_window(cr, uid, 'wizard_graphane_publish',
+                                          context)
             domain = [('value', '=', self._action_value(action))]
             res[id] = True if ir_values.search(cr, uid, domain) else False
         return res
@@ -55,7 +68,8 @@ class ReportGraphane(osv.osv):
 
         report = self.browse(cr, uid, ids[0], context=context)
 
-        act_win = self._get_act_window(cr, uid, 'wizard_graphane_publish', context)
+        act_win = self._get_act_window(cr, uid, 'wizard_graphane_publish',
+                                       context)
         action_id = self._action_value(act_win)
 
         ir_values = self.pool.get('ir.values')
@@ -153,7 +167,7 @@ class ReportGraphane(osv.osv):
     def create(self, cursor, user, vals, context=None):
         "Create report and register it"
         res = super(ReportGraphane, self).create(cursor, user, vals, context)
-        if vals.get('report_type','') == 'graphane':
+        if vals.get('report_type', '') == 'graphane':
             register_report(
                         vals['report_name'],
                         vals['model'],
@@ -164,7 +178,7 @@ class ReportGraphane(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         "Edit report and manage it registration"
         if isinstance(ids, (int, long)):
-            ids = [ids,]
+            ids = [ids, ]
         for rep in self.browse(cr, uid, ids, context=context):
             if rep.report_type != 'graphane':
                 continue
@@ -181,10 +195,6 @@ class ReportGraphane(osv.osv):
                         )
 
         return super(ReportGraphane, self).write(cr, uid, ids, vals, context)
-
-
-
-
 
 
 ReportGraphane()

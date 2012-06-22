@@ -2,8 +2,9 @@
 
 {
     "name" : "Graphane Report Engine",
-    "description" : """This module adds a new Report Engine to use GRAPHANE as backend.
-The module structure and some code is inspired by the report_webkit module.
+    "description" : """This module adds a new Report Engine to use GRAPHANE as
+backend.  The module structure and some code is inspired by the report_webkit
+module.
 """,
     "version" : "0.1",
     "depends" : ["base", "report_xml"],

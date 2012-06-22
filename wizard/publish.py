@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+"""Simple Wizard launching the publish to graphane action
+
+"""
 
 import netsvc
 
-from tools.translate import _
-from osv import fields, osv
+from osv import osv
 
 from ..xmlrpc import GraphaneXMLRPC
 from ..ir_report import register_report
@@ -14,11 +16,9 @@ class report_graphane_publish_actions(osv.osv_memory):
     _name = "report.graphane_publish.actions"
     _description = "Graphane Publish Actions"
 
-    _columns = {
-    }
+    _columns = {}
 
-    _defaults = {
-    }
+    _defaults = {}
 
     def do_action(self, cr, uid, _ids, context=None):
 
@@ -39,7 +39,6 @@ class report_graphane_publish_actions(osv.osv_memory):
         ## This should be an instance of ReportGraphane
 
         service = netsvc.Service._services['report.%s' % report.report_name]
-        ## XXXvlab: who calls this function
         new_context = context.copy()
 
         ## Removing any active_* keys, as they are active_id(s) and

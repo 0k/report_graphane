@@ -8,6 +8,9 @@
       <field name="arch" type="xml">
         <xpath expr="/form/notebook/page[@string='Security']"
                position="before" >
+
+          <!-- Graphane Print tab -->
+
           <page string="Graphane Print"
                 attrs="{'invisible':[('report_type','!=','graphane')]}">
             <group colspan="2" col="2">
@@ -20,6 +23,9 @@
               <field colspan="4" name="graphane_print_header" nolabel="1" />
             </group>
           </page>
+
+          <!-- Graphane Publish tab -->
+
           <page string="Graphane Publish"
                 attrs="{'invisible':[('report_type','!=','graphane')]}">
 
@@ -50,6 +56,7 @@
             </group>
 
           </page>
+
         </xpath>
       </field>
     </record>
